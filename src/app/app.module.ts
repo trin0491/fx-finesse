@@ -5,6 +5,7 @@ import { AppComponent } from './app.component';
 import {StoreModule} from '@ngrx/store';
 import {counterReducer} from './counter/reducers/counter-reducer';
 import {CounterModule} from './counter/counter.module';
+import {DesktopJsModule} from './desktop-js/desktop-js.module';
 
 @NgModule({
   declarations: [
@@ -14,6 +15,7 @@ import {CounterModule} from './counter/counter.module';
     AppRoutingModule,
     BrowserModule,
     CounterModule,
+    DesktopJsModule,
     StoreModule.forRoot({counter: counterReducer})
   ],
   providers: [],

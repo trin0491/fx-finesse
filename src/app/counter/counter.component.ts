@@ -1,9 +1,11 @@
-import {ChangeDetectorRef, Component} from '@angular/core';
+import {ChangeDetectorRef, Component, Inject} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {AppState} from '../app-state';
 import {IncrementAction} from './counter-actions';
 import {Store} from '@ngrx/store';
 import {CounterState} from './counter-state';
+import {Container} from '@morgan-stanley/desktopjs';
+import {CONTAINER} from '../desktop-js/desktop-js.module';
 
 @Component({
   selector: 'fx-counter',
@@ -14,9 +16,9 @@ import {CounterState} from './counter-state';
     </div>
     <div>
       <button class="btn btn-primary-outline" (click)="increment()">
-        <span class="icon icon-circle-with-plus"></span>
-        Increment
+        <span class="icon icon-circle-with-plus"></span>Increment
       </button>
+      <button class="btn btn-primary-outline" (click)="notify()">Notifiy</button>
       <button class="btn btn-default-outline" (click)="toggleChangeDetection()">{{ changeDetection }}</button>
       <button class="btn btn-default-outline" (click)="detect()">Detect</button>
     </div>
@@ -30,12 +32,17 @@ export class CounterComponent {
   private _live = true;
 
   constructor(private _store: Store<AppState>,
-              private _changeDetector: ChangeDetectorRef) {
+              private _changeDetector: ChangeDetectorRef,
+              @Inject(CONTAINER) private _container: Container) {
     this.count = this._store.select(CounterState.selectCounterValue);
   }
 
   increment() {
     this._store.dispatch(new IncrementAction());
+  }
+
+  notify() {
+    this._container.showNotification('Test', {});
   }
 
   toggleChangeDetection() {
