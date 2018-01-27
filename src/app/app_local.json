@@ -1,0 +1,20 @@
+{
+    "devtools_port": 9090,
+    "startup_app": {
+        "name": "Openfin FX Finesse",
+        "description": "OpenFin lab applications",
+        "url": "http://localhost:4200",
+        "uuid": "net.i2037.fx-finesse",
+        "autoShow": true,
+        "defaultCentered": true
+    },
+    "runtime": {
+        "arguments": "",
+        "version": "stable"
+    },
+    "shortcut": {
+        "company": "i2037",
+        "description": "FX Finesse",
+        "name": "FX Finesse"
+    }
+}
