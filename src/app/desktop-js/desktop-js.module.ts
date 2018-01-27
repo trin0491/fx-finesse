@@ -11,9 +11,7 @@ export const CONTAINER = new InjectionToken<Container>('desktopJS.Container');
   declarations: [],
   providers: [{
     provide: CONTAINER,
-    useFactory: () => {
-      return resolveContainer();
-    }
+    useFactory: resolveContainer
   }]
 })
 export class DesktopJsModule { }
