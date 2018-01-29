@@ -1,6 +1,6 @@
-import {CounterState} from '../counter-state';
+import {CounterState} from '../../../common/counter/counter-state';
 import {Action} from '@ngrx/store';
-import {CounterActionTypes} from '../counter-actions';
+import {CounterActionTypes} from '../../../common/counter/counter-actions';
 
 const initialState: CounterState = {
   value: 0

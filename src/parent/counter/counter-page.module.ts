@@ -1,20 +1,20 @@
-import {ModuleWithProviders, NgModule} from '@angular/core';
+import {NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {CounterComponent} from './counter.component';
 import {RouterModule} from '@angular/router';
 import { CounterPageComponent } from './counter-page.component';
+import {CounterModule} from '../../common/counter/counter.module';
 
 @NgModule({
   imports: [
     CommonModule,
+    CounterModule,
     RouterModule.forChild([{
       path: 'counter',
       component: CounterPageComponent
     }])
   ],
   declarations: [
-    CounterComponent,
     CounterPageComponent
   ]
 })
-export class CounterModule { }
+export class CounterPageModule { }
