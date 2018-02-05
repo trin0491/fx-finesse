@@ -4,7 +4,7 @@ import {Observable} from 'rxjs/Observable';
 import {CONTAINER} from './container.service';
 
 @Injectable()
-export class MessageBusService {
+export class MessageBus {
 
   constructor(@Inject(CONTAINER) private _container: Container, private _ngZone: NgZone) { }
 

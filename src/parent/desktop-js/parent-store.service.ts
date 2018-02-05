@@ -1,18 +1,22 @@
-import {MessageBusService} from '../../common/desktop-js/message-bus.service';
+import {MessageBus} from '../../common/desktop-js/message-bus.service';
 import {Action, Store} from '@ngrx/store';
 import {Injectable} from '@angular/core';
+import {IStore} from '../../common/desktop-js/store.service';
+import {MessageBusStore} from '../../common/desktop-js/store.service';
 
 @Injectable()
-export class ParentStoreService<T> {
+export class ParentStoreService<T> extends MessageBusStore<T> implements IStore<T> {
 
-  private static ACTION_TOPIC = 'Actions';
-  private static STATE_TOPIC = 'State';
-
-  constructor(private _msgBus: MessageBusService, private _store: Store<T>) {
-    this._msgBus.getMessages<Action>(ParentStoreService.ACTION_TOPIC)
+  constructor(private _msgBus: MessageBus, private _store: Store<T>) {
+    super();
+    this._msgBus.getMessages<Action>(MessageBusStore.ACTION_TOPIC)
       .subscribe((action: Action) => {
         this.dispatch(action);
       });
+
+    this._store.subscribe((state: T) => {
+      this._msgBus.publish(MessageBusStore.STATE_TOPIC, state);
+    });
   }
 
   dispatch<V extends Action>(action: V): void {
@@ -22,5 +26,4 @@ export class ParentStoreService<T> {
   select<K>(mapFn: (state: T) => K): Store<K> {
     return this._store.select(mapFn);
   }
-
 }

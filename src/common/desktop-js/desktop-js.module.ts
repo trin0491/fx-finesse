@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {resolveContainer} from '@morgan-stanley/desktopjs';
-import {MessageBusService} from './message-bus.service';
+import {MessageBus} from './message-bus.service';
 import {CONTAINER} from './container.service';
 
 @NgModule({
@@ -15,7 +15,7 @@ import {CONTAINER} from './container.service';
       return resolveContainer();
     }
   },
-  MessageBusService
+  MessageBus
   ]
 })
 export class DesktopJsModule { }
