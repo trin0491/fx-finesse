@@ -1,8 +1,8 @@
-import {InjectionToken, NgModule} from '@angular/core';
+import {NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {resolveContainer, Container} from '@morgan-stanley/desktopjs';
-
-export const CONTAINER = new InjectionToken<Container>('desktopJS.Container');
+import {resolveContainer} from '@morgan-stanley/desktopjs';
+import {MessageBusService} from './message-bus.service';
+import {CONTAINER} from './container.service';
 
 @NgModule({
   imports: [
@@ -14,6 +14,8 @@ export const CONTAINER = new InjectionToken<Container>('desktopJS.Container');
     useFactory: () => {
       return resolveContainer();
     }
-  }]
+  },
+  MessageBusService
+  ]
 })
 export class DesktopJsModule { }

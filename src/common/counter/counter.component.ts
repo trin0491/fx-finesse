@@ -5,7 +5,7 @@ import {IncrementAction} from './counter-actions';
 import {Store} from '@ngrx/store';
 import {CounterState} from './counter-state';
 import {Container} from '@morgan-stanley/desktopjs';
-import {CONTAINER} from '../desktop-js/desktop-js.module';
+import {CONTAINER} from '../desktop-js/container.service';
 
 @Component({
   selector: 'fx-counter',
