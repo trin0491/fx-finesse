@@ -1,4 +1,4 @@
-import {Inject, Injectable} from '@angular/core';
+import {Inject, Injectable, NgZone} from '@angular/core';
 import {Container, MessageBusSubscription} from '@morgan-stanley/desktopjs';
 import {Observable} from 'rxjs/Observable';
 import {CONTAINER} from './container.service';
@@ -6,12 +6,14 @@ import {CONTAINER} from './container.service';
 @Injectable()
 export class MessageBusService {
 
-  constructor(@Inject(CONTAINER) private _container: Container) { }
+  constructor(@Inject(CONTAINER) private _container: Container, private _ngZone: NgZone) { }
 
   getMessages<T>(topic: string): Observable<T> {
     return Observable.create((observer) => {
       const p: Promise<MessageBusSubscription> = this._container.ipc.subscribe(topic, (event, msg) => {
-        observer.next(msg);
+        this._ngZone.run(() => {
+          observer.next(msg);
+        });
       });
       return () => {
         p.then((subscription) => {
