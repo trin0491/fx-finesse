@@ -6,6 +6,7 @@ import {Store} from '@ngrx/store';
 import {CounterState} from './counter-state';
 import {Container} from '@morgan-stanley/desktopjs';
 import {CONTAINER} from '../desktop-js/container.service';
+import {STORE} from '../desktop-js/store.service';
 
 @Component({
   selector: 'fx-counter',
@@ -18,7 +19,7 @@ import {CONTAINER} from '../desktop-js/container.service';
       <button class="btn btn-primary-outline" (click)="increment()">
         <span class="icon icon-circle-with-plus"></span>Increment
       </button>
-      <button class="btn btn-primary-outline" (click)="notify()">Notifiy</button>
+      <button class="btn btn-primary-outline" (click)="newWindow()">New Window</button>
       <button class="btn btn-default-outline" (click)="toggleChangeDetection()">{{ changeDetection }}</button>
       <button class="btn btn-default-outline" (click)="detect()">Detect</button>
     </div>
@@ -31,7 +32,7 @@ export class CounterComponent {
   changeDetection = 'Live';
   private _live = true;
 
-  constructor(private _store: Store<AppState>,
+  constructor(@Inject(STORE) private _store: Store<AppState>,
               private _changeDetector: ChangeDetectorRef,
               @Inject(CONTAINER) private _container: Container) {
     this.count = this._store.select(CounterState.selectCounterValue);
@@ -41,8 +42,8 @@ export class CounterComponent {
     this._store.dispatch(new IncrementAction());
   }
 
-  notify() {
-    this._container.showNotification('Test', {});
+  newWindow() {
+    this._container.createWindow('//localhost:4201/child.html');
   }
 
   toggleChangeDetection() {

@@ -4,7 +4,8 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "child": "ng serve --app=child --port=4201",
+    "parent": "ng serve --app=parent",
     "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",

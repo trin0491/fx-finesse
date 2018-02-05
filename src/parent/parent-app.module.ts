@@ -6,6 +6,8 @@ import {StoreModule} from '@ngrx/store';
 import {counterReducer} from './counter/reducers/counter-reducer';
 import {CounterPageModule} from './counter/counter-page.module';
 import {DesktopJsModule} from '../common/desktop-js/desktop-js.module';
+import {STORE} from '../common/desktop-js/store.service';
+import {ParentStoreService} from './desktop-js/parent-store.service';
 
 @NgModule({
   declarations: [
@@ -18,7 +20,10 @@ import {DesktopJsModule} from '../common/desktop-js/desktop-js.module';
     DesktopJsModule,
     StoreModule.forRoot({counter: counterReducer})
   ],
-  providers: [],
+  providers: [{
+    provide: STORE,
+    useClass: ParentStoreService
+  }],
   bootstrap: [ParentAppComponent]
 })
 export class ParentAppModule { }
