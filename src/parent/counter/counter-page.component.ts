@@ -9,9 +9,11 @@ import { DomPortalHost, Portal, ComponentPortal, TemplatePortal } from '@angular
     <fx-counter></fx-counter>
    </ng-template>
    <div class="row">
+    <div>
+      <button class="btn btn-primary-outline" (click)="tearoff()">Tearoff</button>
+      <button class="btn btn-primary-outline" (click)="attach()">Re-attach</button>
+    </div>
     <div class="col-md-12" #hostElement></div>
-    <button class="btn btn-primary-outline" (click)="tearoff()">Tearoff</button>
-    <button class="btn btn-primary-outline" (click)="attach()">Re-attach</button>
    </div>
 
   `,
@@ -27,7 +29,7 @@ export class CounterPageComponent implements OnInit {
   ) { }
 
   @ViewChild('counterTemplate') counterTemplate: TemplateRef<any>;
-  @ViewChild('hostElement') hostElement: ElementRef<any>;
+  @ViewChild('hostElement') hostElement: ElementRef;
 
   private _portalHost: DomPortalHost;
   private _tearOffHost: DomPortalHost;
