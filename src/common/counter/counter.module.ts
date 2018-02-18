@@ -11,6 +11,9 @@ import {CounterComponent} from './counter.component';
   ],
   exports: [
     CounterComponent
+  ],
+  entryComponents: [
+    CounterComponent
   ]
 })
 export class CounterModule { }
