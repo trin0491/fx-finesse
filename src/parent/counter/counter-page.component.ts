@@ -4,6 +4,7 @@ import {
   Component,
   ComponentFactoryResolver,
   ElementRef,
+  Inject,
   Injector,
   OnInit,
   TemplateRef,
@@ -11,6 +12,8 @@ import {
   ViewContainerRef
 } from '@angular/core';
 import {DomPortalHost, TemplatePortal} from '@angular/cdk/portal';
+import {CONTAINER} from '../../common/desktop-js/container.service';
+import {Container, ContainerWindow} from '@morgan-stanley/desktopjs';
 
 @Component({
   selector: 'fx-counter-page',
@@ -35,6 +38,7 @@ export class CounterPageComponent implements OnInit, AfterViewInit {
   constructor(private _componentFactoryResolver: ComponentFactoryResolver,
               private _injector: Injector,
               private _appRef: ApplicationRef,
+              @Inject(CONTAINER) private _container: Container,
               private _viewContainerRef: ViewContainerRef) {
   }
 
@@ -44,7 +48,7 @@ export class CounterPageComponent implements OnInit, AfterViewInit {
   private _portalHost: DomPortalHost;
   private _tearOffHost: DomPortalHost;
   private _templatePortal: TemplatePortal;
-  private _tearOffWindow: Window;
+  private _tearOffContainer: ContainerWindow;
 
   ngOnInit() {
   }
@@ -71,23 +75,42 @@ export class CounterPageComponent implements OnInit, AfterViewInit {
 
 
   tearoff() {
-    this._tearOffWindow = window.open('', 'windowName');
-    this._tearOffHost = new DomPortalHost(
-      // Create the Portal Host on the parent element
-      this._tearOffWindow.document.body,
-      this._componentFactoryResolver,
-      this._appRef,
-      this._injector
-    );
+    this._container.createWindow('assets/tearoff.html').then((container: ContainerWindow) => {
+      this._tearOffContainer = container;
+      let tearOffWin: Window;
 
-    this._portalHost.detach();
-    this._tearOffHost.attach(this._templatePortal);
+      const tearOffReady = () => {
+        const outletElement: Element = tearOffWin.document.body;
+        this._tearOffHost = new DomPortalHost(
+          // Create the Portal Host on the parent element
+          outletElement,
+          this._componentFactoryResolver,
+          this._appRef,
+          this._injector
+        );
+        this._portalHost.detach();
+        this._tearOffHost.attach(this._templatePortal);
+      };
+
+      // TODO should desktopJS provide an accessor for window?
+      if (container.innerWindow.getNativeWindow) {
+        tearOffWin = container.innerWindow.getNativeWindow();
+        // openfin is already loaded when the promise is resolved
+        tearOffReady();
+      } else {
+        tearOffWin = container.innerWindow;
+        // TODO should desktopjs smooth out that web windows aren't loaded by the time they're created
+        tearOffWin.addEventListener('DOMContentLoaded', tearOffReady);
+      }
+
+    });
   }
 
   attach() {
     this._tearOffHost.detach();
-    this._tearOffWindow.close();
-    this._portalHost.attach(this._templatePortal);
+    this._tearOffContainer.close().then(() => {
+      this._portalHost.attach(this._templatePortal);
+    });
   }
 
 
