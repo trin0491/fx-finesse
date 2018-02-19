@@ -1,32 +1,42 @@
-import { Component, OnInit, ComponentFactoryResolver, Injector, ApplicationRef, ViewChild, TemplateRef, ViewContainerRef, ElementRef } from '@angular/core';
-import { DomPortalHost, Portal, ComponentPortal, TemplatePortal } from '@angular/cdk/portal';
+import {
+  AfterViewInit,
+  ApplicationRef,
+  Component,
+  ComponentFactoryResolver,
+  ElementRef,
+  Injector,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  ViewContainerRef
+} from '@angular/core';
+import {DomPortalHost, TemplatePortal} from '@angular/cdk/portal';
 
 @Component({
   selector: 'fx-counter-page',
   template: `
-   <ng-template #counterTemplate>
-    <h3>Counter Page</h3>
-    <fx-counter></fx-counter>
-   </ng-template>
-   <div class="row">
-    <div>
-      <button class="btn btn-primary-outline" (click)="tearoff()">Tearoff</button>
-      <button class="btn btn-primary-outline" (click)="attach()">Re-attach</button>
+    <ng-template #counterTemplate>
+      <h3>Counter Page</h3>
+      <fx-counter></fx-counter>
+    </ng-template>
+    <div class="row">
+      <div>
+        <button class="btn btn-primary-outline" (click)="tearoff()">Tearoff</button>
+        <button class="btn btn-primary-outline" (click)="attach()">Re-attach</button>
+      </div>
+      <div class="col-md-12" #hostElement></div>
     </div>
-    <div class="col-md-12" #hostElement></div>
-   </div>
 
   `,
   styles: []
 })
-export class CounterPageComponent implements OnInit {
+export class CounterPageComponent implements OnInit, AfterViewInit {
 
-  constructor(
-    private _componentFactoryResolver: ComponentFactoryResolver,
-    private _injector: Injector,
-    private _appRef: ApplicationRef,
-    private _viewContainerRef: ViewContainerRef
-  ) { }
+  constructor(private _componentFactoryResolver: ComponentFactoryResolver,
+              private _injector: Injector,
+              private _appRef: ApplicationRef,
+              private _viewContainerRef: ViewContainerRef) {
+  }
 
   @ViewChild('counterTemplate') counterTemplate: TemplateRef<any>;
   @ViewChild('hostElement') hostElement: ElementRef;
@@ -34,7 +44,7 @@ export class CounterPageComponent implements OnInit {
   private _portalHost: DomPortalHost;
   private _tearOffHost: DomPortalHost;
   private _templatePortal: TemplatePortal;
-  private _tearOffWindow:Window;
+  private _tearOffWindow: Window;
 
   ngOnInit() {
   }
