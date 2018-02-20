@@ -7,7 +7,7 @@ export class NgSharedServiceProvider {
   // TODO debug mode that stores the registrations so they can be tested at run time
   static readonly PARENT_INJECTOR_NAME = new InjectionToken<string>('parentInjectorName');
 
-  static find<T>(token: string, clazz: T): Provider[] {
+  static get<T>(token: string, clazz: T): Provider[] {
     return [{
       provide: token,
       useFactory: (ngInjector: Injector, parentName: string) => {
