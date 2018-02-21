@@ -11,8 +11,12 @@ export class NgSharedServiceProvider {
     return [{
       provide: token,
       useFactory: (ngInjector: Injector, parentName: string) => {
-        const injector: IInjector = NgInjector.fromParent(parentName, ngInjector);
-        return injector.get(token, clazz);
+        const injector: IInjector = InjectorBase.getInstance(parentName);
+        if (injector) {
+          return injector.get(token, clazz);
+        } else {
+          throw new Error('Failed to find shared injector');
+        }
       },
       deps: [Injector, NgSharedServiceProvider.PARENT_INJECTOR_NAME]
     }, {

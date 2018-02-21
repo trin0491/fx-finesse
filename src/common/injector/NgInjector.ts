@@ -16,7 +16,7 @@ export class NgInjector extends InjectorBase implements IInjector {
 
   doGet<T>(token: string, clazz: T): T {
     // TODO cannot use string token because ng5 has deprecated it and is using Type<T> | InjectionToken
-    return this._ngInjector.get(clazz, null);
+    return this._ngInjector.get(token, null);
   }
 
 }
