@@ -5,6 +5,8 @@ import {ChildPageComponent} from './child-page.component';
 import {CounterModule} from '../common/counter/counter.module';
 import {Store} from '@ngrx/store';
 import {NgSharedServiceProvider} from '../common/injector/NgSharedServiceProvider';
+import {STORE} from '../common/desktop-js/store.service';
+import {ChildStore} from './child-store.service';
 
 @NgModule({
   declarations: [
@@ -19,6 +21,9 @@ import {NgSharedServiceProvider} from '../common/injector/NgSharedServiceProvide
     }])
   ],
   providers: [{
+    provide: STORE,
+    useClass: ChildStore
+  }, {
     provide: NgSharedServiceProvider.PARENT_INJECTOR_NAME,
     useValue: 'sharedInjector'
   }, ...NgSharedServiceProvider.get('myStore', Store)]
