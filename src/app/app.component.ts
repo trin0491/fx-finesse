@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'fx-root',
@@ -9,5 +9,5 @@ import { Component } from '@angular/core';
   `,
   styles: []
 })
-export class ParentAppComponent {
+export class AppComponent {
 }

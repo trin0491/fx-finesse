@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 
 @Component({
-  selector: 'fx-child-root',
+  selector: 'fx-child-page',
   template: `
     <div class="container-fluid">
       <div class="row">
@@ -13,5 +13,5 @@ import { Component } from '@angular/core';
   `,
   styles: []
 })
-export class ChildAppComponent {
+export class ChildPageComponent {
 }

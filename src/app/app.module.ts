@@ -1,18 +1,19 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {AppRoutingModule} from './app-routing.module';
-import {ParentAppComponent} from './parent-app.component';
-import {DesktopJsModule} from '../common/desktop-js/desktop-js.module';
+import {AppComponent} from './app.component';
+import {DesktopJsModule} from './common/desktop-js/desktop-js.module';
 
 @NgModule({
   declarations: [
-    ParentAppComponent,
+    AppComponent,
   ],
   imports: [
     AppRoutingModule,
     BrowserModule,
     DesktopJsModule,
   ],
-  bootstrap: [ParentAppComponent]
+  bootstrap: [AppComponent]
 })
-export class ParentAppModule { }
+export class AppModule {
+}

@@ -46,16 +46,16 @@ export class CounterComponent {
   }
 
   newWindow() {
+    const injector = NgInjector.fromParent(this._parentInjectorName, this._ngInjector);
+    if (!injector) {
+      throw new Error('Failed to find shared injector');
+    }
     this._container.createWindow('//localhost:4200/child').then((childContainer: ContainerWindow) => {
       let tearOffWin: Window;
       if (childContainer.innerWindow.getNativeWindow) {
         tearOffWin = childContainer.innerWindow.getNativeWindow();
       } else {
         tearOffWin = childContainer.innerWindow;
-      }
-      const injector = NgInjector.fromParent(this._parentInjectorName, this._ngInjector);
-      if (!injector) {
-        throw new Error('Failed to find shared injector');
       }
       tearOffWin[this._parentInjectorName] = injector;
     });

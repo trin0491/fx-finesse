@@ -12,11 +12,11 @@ import {
   ViewContainerRef
 } from '@angular/core';
 import {DomPortalHost, TemplatePortal} from '@angular/cdk/portal';
-import {CONTAINER} from '../../common/desktop-js/container.service';
+import {CONTAINER} from '../common/desktop-js/container.service';
 import {Container, ContainerWindow} from '@morgan-stanley/desktopjs';
 
 @Component({
-  selector: 'fx-counter-page',
+  selector: 'fx-parent-page',
   template: `
     <ng-template #counterTemplate>
       <h3>Counter Page</h3>
@@ -33,7 +33,7 @@ import {Container, ContainerWindow} from '@morgan-stanley/desktopjs';
   `,
   styles: []
 })
-export class CounterPageComponent implements OnInit, AfterViewInit {
+export class ParentPageComponent implements OnInit, AfterViewInit {
 
   constructor(private _componentFactoryResolver: ComponentFactoryResolver,
               private _injector: Injector,
@@ -82,7 +82,7 @@ export class CounterPageComponent implements OnInit, AfterViewInit {
       const tearOffReady = () => {
         const outletElement: Element = tearOffWin.document.body;
         this._tearOffHost = new DomPortalHost(
-          // Create the Portal Host on the parent element
+          // Create the Portal Host on the app element
           outletElement,
           this._componentFactoryResolver,
           this._appRef,

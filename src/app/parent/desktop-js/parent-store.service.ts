@@ -1,8 +1,7 @@
 import {MessageBus} from '../../common/desktop-js/message-bus.service';
 import {Action, Store} from '@ngrx/store';
 import {Inject, Injectable, OnDestroy} from '@angular/core';
-import {IStore} from '../../common/desktop-js/store.service';
-import {MessageBusStore} from '../../common/desktop-js/store.service';
+import {IStore, MessageBusStore} from '../../common/desktop-js/store.service';
 import {CONTAINER, WindowCreatedAction} from '../../common/desktop-js/container.service';
 import {Container, ContainerEventArgs} from '@morgan-stanley/desktopjs';
 import {Subject} from 'rxjs/Subject';
