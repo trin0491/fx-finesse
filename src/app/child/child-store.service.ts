@@ -1,8 +1,8 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {Action, select, Store} from '@ngrx/store';
-import {MessageBus} from '../../common/desktop-js/message-bus.service';
+import {MessageBus} from '../common/desktop-js/message-bus.service';
 import {Observable} from 'rxjs/Observable';
-import {IStore, MessageBusStore} from '../../common/desktop-js/store.service';
+import {IStore, MessageBusStore} from '../common/desktop-js/store.service';
 import {Subject} from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 

@@ -1,6 +1,6 @@
 import {Store, StoreModule} from '@ngrx/store';
 import {STORE} from '../common/desktop-js/store.service';
-import {ParentStoreService} from './desktop-js/parent-store.service';
+import {ParentStoreService} from './parent-store.service';
 import {NgModule} from '@angular/core';
 import {counterReducer} from './reducers/counter-reducer';
 import {CommonModule} from '@angular/common';
