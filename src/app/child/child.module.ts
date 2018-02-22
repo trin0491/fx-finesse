@@ -26,7 +26,7 @@ import {ChildStore} from './child-store.service';
   }, {
     provide: NgSharedServiceProvider.PARENT_INJECTOR_NAME,
     useValue: 'sharedInjector'
-  }, ...NgSharedServiceProvider.get('myStore', Store)]
+  }, NgSharedServiceProvider.get('myStore', Store)]
 })
 export class ChildModule {
 }

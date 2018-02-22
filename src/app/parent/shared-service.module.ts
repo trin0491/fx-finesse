@@ -18,8 +18,8 @@ import {NgSharedServiceProvider} from '../common/injector/NgSharedServiceProvide
     provide: NgSharedServiceProvider.PARENT_INJECTOR_NAME,
     useValue: 'sharedInjector'
   },
-    ...NgSharedServiceProvider.exportExisting('myStore', Store),
-    ...NgSharedServiceProvider.shareInjector()
+    NgSharedServiceProvider.exportExisting('myStore', Store),
+    NgSharedServiceProvider.shareInjector()
   ],
 })
 export class SharedServicesModule {
