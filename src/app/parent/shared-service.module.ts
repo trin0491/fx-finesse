@@ -1,7 +1,7 @@
 import {Store, StoreModule} from '@ngrx/store';
 import {STORE} from '../common/desktop-js/store.service';
 import {ParentStoreService} from './parent-store.service';
-import {NgModule} from '@angular/core';
+import {NgModule, NgZone} from '@angular/core';
 import {counterReducer} from './reducers/counter-reducer';
 import {CommonModule} from '@angular/common';
 import {NgSharedServiceProvider} from '../common/injector/NgSharedServiceProvider';
@@ -19,6 +19,7 @@ import {NgSharedServiceProvider} from '../common/injector/NgSharedServiceProvide
     useValue: 'sharedInjector'
   },
     NgSharedServiceProvider.exportExisting('myStore', Store),
+    NgSharedServiceProvider.exportExisting('ngZone', NgZone),
     NgSharedServiceProvider.shareInjector()
   ],
 })
