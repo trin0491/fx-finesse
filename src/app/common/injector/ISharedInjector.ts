@@ -1,3 +1,3 @@
-export interface IInjector {
+export interface ISharedInjector {
   get<T>(token: string, clazz: T): T;
 }

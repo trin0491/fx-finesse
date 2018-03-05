@@ -1,14 +1,14 @@
-import {IInjector} from './IInjector';
-import {InjectorBase} from './InjectorBase';
+import {ISharedInjector} from './ISharedInjector';
+import {SharedInjectorBase} from './SharedInjectorBase';
 
-export class AngularJSInjector extends InjectorBase implements IInjector {
+export class AngularJSInjector extends SharedInjectorBase implements ISharedInjector {
 
-  static fromParent(parentName: string, $injector: any): IInjector {
-    const parent: IInjector = InjectorBase.getInstance(parentName);
+  static fromParent(parentName: string, $injector: any): ISharedInjector {
+    const parent: ISharedInjector = SharedInjectorBase.getInstance(parentName);
     return new AngularJSInjector(parent, $injector);
   }
 
-  constructor(parent: IInjector, private _$injector: any) {
+  constructor(parent: ISharedInjector, private _$injector: any) {
     super(parent);
   }
 

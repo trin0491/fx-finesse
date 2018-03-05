@@ -1,16 +1,16 @@
-import {IInjector} from './IInjector';
+import {ISharedInjector} from './ISharedInjector';
 
-export abstract class InjectorBase implements IInjector {
+export abstract class SharedInjectorBase implements ISharedInjector {
 
-  static getInstance(name: string): IInjector {
+  static getInstance(name: string): ISharedInjector {
     return window[name];
   }
 
-  static setInstance(name: string, injector: IInjector) {
+  static setInstance(name: string, injector: ISharedInjector) {
     window[name] = injector;
   }
 
-  constructor(private _parent: IInjector) {
+  constructor(private _parent: ISharedInjector) {
   }
 
   get<T>(token: string, clazz: T): T {

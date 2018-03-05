@@ -1,7 +1,7 @@
 import {APP_INITIALIZER, InjectionToken, Injector, Provider, Type} from '@angular/core';
 import {NgInjector} from './NgInjector';
-import {IInjector} from './IInjector';
-import {InjectorBase} from './InjectorBase';
+import {ISharedInjector} from './ISharedInjector';
+import {SharedInjectorBase} from './SharedInjectorBase';
 
 export class NgSharedServiceProvider {
   // TODO debug mode that stores the registrations so they can be tested at run time
@@ -11,7 +11,7 @@ export class NgSharedServiceProvider {
     return [{
       provide: token,
       useFactory: (ngInjector: Injector, parentName: string) => {
-        const injector: IInjector = InjectorBase.getInstance(parentName);
+        const injector: ISharedInjector = SharedInjectorBase.getInstance(parentName);
         if (injector) {
           return injector.get(token, clazz);
         } else {
@@ -48,7 +48,7 @@ export class NgSharedServiceProvider {
       useFactory: (ngInjector: Injector, parentName) => {
         return () => {
           const newInjector = NgInjector.fromParent(parentName, ngInjector);
-          InjectorBase.setInstance(parentName, newInjector);
+          SharedInjectorBase.setInstance(parentName, newInjector);
         };
       },
       deps: [Injector, NgSharedServiceProvider.PARENT_INJECTOR_NAME],

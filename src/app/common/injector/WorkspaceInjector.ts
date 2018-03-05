@@ -1,8 +1,8 @@
-import {IInjector} from './IInjector';
-import {InjectorBase} from './InjectorBase';
+import {ISharedInjector} from './ISharedInjector';
+import {SharedInjectorBase} from './SharedInjectorBase';
 
 
-export class WorkspaceInjector extends InjectorBase implements IInjector {
+export class WorkspaceInjector extends SharedInjectorBase implements ISharedInjector {
 
   doGet<T>(token: string, clazz: T): T {
     return undefined;
