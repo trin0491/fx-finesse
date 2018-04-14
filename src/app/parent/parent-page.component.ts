@@ -24,8 +24,8 @@ import {Container, ContainerWindow} from '@morgan-stanley/desktopjs';
     </ng-template>
     <div class="row">
       <div>
-        <button class="btn btn-primary-outline" (click)="tearoff()">Tearoff</button>
-        <button class="btn btn-primary-outline" (click)="attach()">Re-attach</button>
+        <button class="btn btn-primary-outline" (click)="tearoff()">DOM Tearoff</button>
+        <button class="btn btn-primary-outline" (click)="attach()">DOM Re-attach</button>
       </div>
       <div class="col-md-12" #hostElement></div>
     </div>

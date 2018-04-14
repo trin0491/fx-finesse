@@ -1,4 +1,4 @@
-import { AppPage } from './app.po';
+import {AppPage} from './app.po';
 
 describe('fx-finesse App', () => {
   let page: AppPage;
@@ -7,8 +7,8 @@ describe('fx-finesse App', () => {
     page = new AppPage();
   });
 
-  it('should display welcome message', () => {
+  it('should display a 0 count', () => {
     page.navigateTo();
-    expect(page.getParagraphText()).toEqual('Welcome to fx!');
+    expect(page.getCount()).toEqual('0');
   });
 });

@@ -1,11 +1,11 @@
-import { browser, by, element } from 'protractor';
+import {browser, by, element} from 'protractor';
 
 export class AppPage {
   navigateTo() {
-    return browser.get('/');
+    return browser.get('/parent');
   }
 
-  getParagraphText() {
-    return element(by.css('fx-root h1')).getText();
+  getCount() {
+    return element(by.css('h3.statcard-number')).getText();
   }
 }
