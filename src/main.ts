@@ -4,12 +4,6 @@ import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 import {AppModule} from './app/app.module';
 import {environment} from './environments/environment';
 
-if (window['sharedInjector']) {
-  console.log('Got a shared injector');
-} else {
-  console.log('No shared injector');
-}
-
 try {
   fin.desktop.main(function () {
     initWithOpenFin();

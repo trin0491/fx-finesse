@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {Injector, NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {ChildPageComponent} from './child-page.component';
@@ -7,6 +7,9 @@ import {Store} from '@ngrx/store';
 import {NgSharedServiceProvider} from '../common/injector/NgSharedServiceProvider';
 import {STORE} from '../common/desktop-js/store.service';
 import {ChildStore} from './child-store.service';
+import {SharedInjectorBase} from '../common/injector/SharedInjectorBase';
+import {ISharedInjector} from '../common/injector/ISharedInjector';
+import {NgInjector} from '../common/injector/NgInjector';
 
 @NgModule({
   declarations: [
@@ -24,9 +27,24 @@ import {ChildStore} from './child-store.service';
     provide: STORE,
     useClass: ChildStore
   }, {
-    provide: NgSharedServiceProvider.PARENT_INJECTOR_NAME,
+    provide: NgSharedServiceProvider.INJECTOR_NAME,
     useValue: 'sharedInjector'
-  }, NgSharedServiceProvider.import('myStore', Store)]
+  }, {
+    provide: ISharedInjector,
+    useFactory: (ngInjector: Injector, name: string) => {
+      const newInjector = NgInjector.fromParent(name, ngInjector);
+      SharedInjectorBase.setInstance(name, newInjector);
+      console.log('Created shared injector');
+      return newInjector;
+    },
+    deps: [Injector, NgSharedServiceProvider.INJECTOR_NAME]
+  },
+    NgSharedServiceProvider.import('myStore', Store)
+  ]
 })
 export class ChildModule {
+
+  constructor() {
+    console.log('Created Child Module');
+  }
 }

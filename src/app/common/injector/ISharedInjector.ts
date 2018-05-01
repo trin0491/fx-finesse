@@ -1,3 +1,3 @@
-export interface ISharedInjector {
-  get<T>(token: string, clazz: T): T;
+export abstract class ISharedInjector {
+  abstract get<T>(token: string, clazz: T): T;
 }

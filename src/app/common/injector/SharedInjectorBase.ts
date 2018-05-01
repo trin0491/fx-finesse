@@ -10,7 +10,7 @@ export abstract class SharedInjectorBase implements ISharedInjector {
     window[name] = injector;
   }
 
-  constructor(private _parent: ISharedInjector) {
+  protected constructor(private _parent: ISharedInjector) {
   }
 
   get<T>(token: string, clazz: T): T {

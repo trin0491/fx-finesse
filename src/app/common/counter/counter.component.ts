@@ -1,13 +1,11 @@
-import {ChangeDetectorRef, Component, Inject, Injector} from '@angular/core';
+import {ChangeDetectorRef, Component, Inject} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {AppState} from '../app-state';
 import {IncrementAction} from './counter-actions';
 import {Store} from '@ngrx/store';
 import {CounterState} from './counter-state';
-import {Container, ContainerWindow} from '@morgan-stanley/desktopjs';
+import {Container} from '@morgan-stanley/desktopjs';
 import {CONTAINER} from '../desktop-js/container.service';
-import {NgSharedServiceProvider} from '../injector/NgSharedServiceProvider';
-import {NgInjector} from '../injector/NgInjector';
 
 @Component({
   selector: 'fx-counter',
@@ -35,9 +33,7 @@ export class CounterComponent {
 
   constructor(private _store: Store<AppState>,
               private _changeDetector: ChangeDetectorRef,
-              @Inject(CONTAINER) private _container: Container,
-              @Inject(NgSharedServiceProvider.PARENT_INJECTOR_NAME) private _parentInjectorName: string,
-              private _ngInjector: Injector) {
+              @Inject(CONTAINER) private _container: Container) {
     this.count = this._store.select(CounterState.selectCounterValue);
   }
 
@@ -46,18 +42,8 @@ export class CounterComponent {
   }
 
   newWindow() {
-    const injector = NgInjector.fromParent(this._parentInjectorName, this._ngInjector);
-    if (!injector) {
-      throw new Error('Failed to find shared injector');
-    }
-    this._container.createWindow('//localhost:4200/child').then((childContainer: ContainerWindow) => {
-      let tearOffWin: Window;
-      if (childContainer.innerWindow.getNativeWindow) {
-        tearOffWin = childContainer.innerWindow.getNativeWindow();
-      } else {
-        tearOffWin = childContainer.innerWindow;
-      }
-      tearOffWin[this._parentInjectorName] = injector;
+    this._container.createWindow('//localhost:4200/child').then(() => {
+      console.log('Opened a window');
     });
   }
 

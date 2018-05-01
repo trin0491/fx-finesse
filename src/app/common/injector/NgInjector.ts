@@ -6,7 +6,10 @@ import {Injector} from '@angular/core';
 export class NgInjector extends SharedInjectorBase implements ISharedInjector {
 
   static fromParent(parentName: string, injector: Injector): ISharedInjector {
-    const parent: ISharedInjector = SharedInjectorBase.getInstance(parentName);
+    let parent: ISharedInjector = null;
+    if (window.opener) {
+      parent = window.opener[parentName];
+    }
     return new NgInjector(parent, injector);
   }
 
