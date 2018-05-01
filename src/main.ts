@@ -1,9 +1,8 @@
-import {enableProdMode, NgZone} from '@angular/core';
+import {enableProdMode} from '@angular/core';
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 
 import {AppModule} from './app/app.module';
 import {environment} from './environments/environment';
-import {SharedInjectorBase} from './app/common/injector/SharedInjectorBase';
 
 if (window['sharedInjector']) {
   console.log('Got a shared injector');
@@ -36,11 +35,6 @@ function initNoOpenFin() {
 
 if (environment.production) {
   enableProdMode();
-}
-
-const injector = SharedInjectorBase.getInstance('sharedInjector');
-if (injector) {
-  const myZone = injector.get('ngZone', NgZone);
 }
 
 platformBrowserDynamic().bootstrapModule(AppModule)
