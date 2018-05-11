@@ -28,13 +28,14 @@ export class SharedServicesModule {
 
   constructor(@Inject(NgSharedServiceProvider.INJECTOR_NAME) name: string,
               @Inject(NgSharedServiceProvider.EXPORT_MANIFESTS) manifests: IExportManifest[],
-              ngInjector: Injector) {
+              ngInjector: Injector,
+              ngZone: NgZone) {
     console.log('Created Shared Services Module and exporting services');
     const providers = manifests.map((manifest) => {
       return {
         provide: manifest.exportToken,
         useFactory: () => {
-          return ngInjector.get(manifest.localToken);
+          return ngZone.run(() => ngInjector.get(manifest.localToken));
         },
         deps: []
       };

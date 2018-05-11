@@ -2,10 +2,10 @@ import {ChangeDetectorRef, Component, Inject} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {AppState} from '../app-state';
 import {IncrementAction} from './counter-actions';
-import {Store} from '@ngrx/store';
 import {CounterState} from './counter-state';
 import {Container} from '@morgan-stanley/desktopjs';
 import {CONTAINER} from '../desktop-js/container.service';
+import {IStore, STORE} from '../desktop-js/store.service';
 
 @Component({
   selector: 'fx-counter',
@@ -31,7 +31,7 @@ export class CounterComponent {
   changeDetection = 'Live';
   private _live = true;
 
-  constructor(private _store: Store<AppState>,
+  constructor(@Inject(STORE) private _store: IStore<AppState>,
               private _changeDetector: ChangeDetectorRef,
               @Inject(CONTAINER) private _container: Container) {
     this.count = this._store.select(CounterState.selectCounterValue);

@@ -13,7 +13,7 @@ export class NgSharedServiceProvider {
 
   static import<T>(token: string, clazz: T): Provider[] {
     return [{
-      provide: clazz,
+      provide: clazz, // 'myservice'
       useFactory: (injector: ISharedInjector) => {
         console.log('import');
         if (injector) {

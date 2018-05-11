@@ -1,33 +1,35 @@
-import {Injectable, OnDestroy} from '@angular/core';
-import {Action, select, Store} from '@ngrx/store';
-import {MessageBus} from '../common/desktop-js/message-bus.service';
-import {Observable} from 'rxjs/Observable';
+import {Injectable, NgZone} from '@angular/core';
+import {Action, Store} from '@ngrx/store';
 import {IStore, MessageBusStore} from '../common/desktop-js/store.service';
-import {Subject} from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
+import {Observable} from 'rxjs/Observable';
+import {MessageBus} from '../common/desktop-js/message-bus.service';
+
+export function enterZone(zone: NgZone) {
+  return <T>(source: Observable<T>) =>
+    new Observable<T>(observer =>
+      source.subscribe({
+        next: (x) => zone.run(() => observer.next(x)),
+        error: (err) => observer.error(err),
+        complete: () => observer.complete()
+      })
+    );
+}
+
 
 @Injectable()
-export class ChildStore<T> extends MessageBusStore<T> implements IStore<T>, OnDestroy {
+export class ChildStore<T> implements IStore<T> {
 
-  private _isDestroyed: Subject<void>;
-  private _state: Observable<any>;
-
-  constructor(private _msgBus: MessageBus) {
-    super();
-    this._isDestroyed = new Subject();
-    this._state = this._msgBus.getMessages(MessageBusStore.STATE_TOPIC)
-      .takeUntil(this._isDestroyed);
+  constructor(private _msgBus: MessageBus, private _storeImpl: Store<T>, private _ngZone: NgZone) {
   }
 
   dispatch<V extends Action>(action: V): void {
     this._msgBus.publish(MessageBusStore.ACTION_TOPIC, action);
   }
 
-  select<K>(mapFn: (state: T) => K): Store<K> {
-    return select(mapFn)(this._state);
-  }
-
-  ngOnDestroy(): void {
-    this._isDestroyed.next();
+  select<K>(mapFn: (state: T) => K): Observable<K> {
+    return this._storeImpl.select(mapFn).pipe(
+      enterZone(this._ngZone)
+    );
   }
 }
