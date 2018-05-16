@@ -9,7 +9,7 @@ import {STORE} from '../common/desktop-js/store.service';
 import {ChildStore} from './child-store.service';
 import {SharedInjectorBase} from '../common/injector/SharedInjectorBase';
 import {ISharedInjector} from '../common/injector/ISharedInjector';
-import {NgInjector} from '../common/injector/NgInjector';
+import {NgSharedInjector} from '../common/injector/NgSharedInjector';
 
 @NgModule({
   declarations: [
@@ -32,7 +32,7 @@ import {NgInjector} from '../common/injector/NgInjector';
   }, {
     provide: ISharedInjector,
     useFactory: (ngInjector: Injector, name: string) => {
-      const newInjector = NgInjector.fromParent(name, ngInjector);
+      const newInjector = NgSharedInjector.fromParent(name, ngInjector);
       SharedInjectorBase.setInstance(name, newInjector);
       console.log('Created shared injector');
       return newInjector;

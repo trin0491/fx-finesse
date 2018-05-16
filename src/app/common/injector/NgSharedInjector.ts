@@ -3,14 +3,14 @@ import {SharedInjectorBase} from './SharedInjectorBase';
 import {Injector} from '@angular/core';
 
 
-export class NgInjector extends SharedInjectorBase implements ISharedInjector {
+export class NgSharedInjector extends SharedInjectorBase implements ISharedInjector {
 
   static fromParent(parentName: string, injector: Injector): ISharedInjector {
     let parent: ISharedInjector = null;
     if (window.opener) {
       parent = window.opener[parentName];
     }
-    return new NgInjector(parent, injector);
+    return new NgSharedInjector(parent, injector);
   }
 
   constructor(parent: ISharedInjector, private _ngInjector: Injector) {

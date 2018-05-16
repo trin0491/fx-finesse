@@ -15,7 +15,6 @@ export class NgSharedServiceProvider {
     return [{
       provide: clazz, // 'myservice'
       useFactory: (injector: ISharedInjector) => {
-        console.log('import');
         if (injector) {
           return injector.get(token, clazz);
         } else {

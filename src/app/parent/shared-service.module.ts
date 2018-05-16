@@ -6,7 +6,7 @@ import {counterReducer} from './reducers/counter-reducer';
 import {CommonModule} from '@angular/common';
 import {IExportManifest, NgSharedServiceProvider} from '../common/injector/NgSharedServiceProvider';
 import {SharedInjectorBase} from '../common/injector/SharedInjectorBase';
-import {NgInjector} from '../common/injector/NgInjector';
+import {NgSharedInjector} from '../common/injector/NgSharedInjector';
 
 @NgModule({
   imports: [
@@ -40,7 +40,7 @@ export class SharedServicesModule {
         deps: []
       };
     });
-    const sharedInjector = NgInjector.fromParent(name, Injector.create({providers: providers, parent: null, name: name}));
+    const sharedInjector = NgSharedInjector.fromParent(name, Injector.create({providers: providers, parent: Injector.NULL, name: name}));
     SharedInjectorBase.setInstance(name, sharedInjector);
   }
 }
