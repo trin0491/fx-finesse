@@ -7,8 +7,8 @@ describe('fx-finesse App', () => {
     page = new AppPage();
   });
 
-  it('should display a 0 count', () => {
-    page.navigateTo();
-    expect(page.getCount()).toEqual('0');
+  it('should display a 0 count', async () => {
+    await page.navigateTo();
+    expect(await page.getCount()).toEqual('0');
   });
 });
