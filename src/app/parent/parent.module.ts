@@ -4,19 +4,26 @@ import {RouterModule} from '@angular/router';
 import {ParentPageComponent} from './parent-page.component';
 import {CounterModule} from '../common/counter/counter.module';
 import {SharedServicesModule} from './shared-service.module';
+import {UserPageComponent} from './user-page.component';
+import {HttpClientModule} from '@angular/common/http';
 
 @NgModule({
   imports: [
     CommonModule,
     CounterModule,
     SharedServicesModule,
+    HttpClientModule,
     RouterModule.forChild([{
       path: '',
       component: ParentPageComponent
+    }, {
+      path: 'user',
+      component: UserPageComponent
     }])
   ],
   declarations: [
-    ParentPageComponent
+    ParentPageComponent,
+    UserPageComponent
   ]
 })
 export class ParentModule {

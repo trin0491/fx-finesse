@@ -20,6 +20,9 @@ exports.config = {
     print: function() {}
   },
   SELENIUM_PROMISE_MANAGER: false,
+  plugins: [{
+    path: './node_modules/mock-http-server/dist/protractor/MockHttpServerPlugin.js'
+  }],
   onPrepare() {
     require('ts-node').register({
       project: 'e2e/tsconfig.e2e.json'
