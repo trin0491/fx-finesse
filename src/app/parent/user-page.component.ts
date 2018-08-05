@@ -12,7 +12,7 @@ import {IUser} from './model/User';
         mock-server works!
       </p>
       <p class="user-name">{{username | async}}</p>
-      <button (click)="onClick()">Click Me</button>
+      <button class="btn" (click)="onClick()">Click Me</button>
     </div>
   `,
   styles: []
