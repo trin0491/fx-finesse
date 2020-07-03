@@ -1,13 +1,10 @@
-import {Component} from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
-  selector: 'fx-root',
-  template: `
-    <div class="container-fluid">
-      <router-outlet></router-outlet>
-    </div>
-  `,
-  styles: []
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+  title = 'fx-finesse';
 }
