@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import {SerialPortService} from './serialport/serial-port.service';
+import {Observable, of} from 'rxjs';
+import {catchError} from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -8,14 +10,16 @@ import {SerialPortService} from './serialport/serial-port.service';
 })
 export class AppComponent {
   title = 'fx-finesse';
-  ports = [''];
+  ports: Observable<string[]>;
 
   constructor(private serialPort: SerialPortService) {
   }
 
   getPorts(): void {
-    this.serialPort.getPorts().then((ports) => {
-      this.ports = ports;
-    });
+    this.ports = this.serialPort.getPorts().pipe(
+      catchError((err) => {
+        return of([err.toString()]);
+      })
+    );
   }
 }

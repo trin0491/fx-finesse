@@ -10,10 +10,7 @@ import {concatMap, first, map} from 'rxjs/operators';
 })
 export class SerialPortService {
 
-  private client: Observable<ChannelClient>;
-
-  constructor(matrixConnect: MatrixConnect) {
-    this.client = matrixConnect.getChannel('SerialPort');
+  constructor(private matrixConnect: MatrixConnect) {
   }
 
   isSupported(): Observable<boolean> {
@@ -22,17 +19,17 @@ export class SerialPortService {
   }
 
   // TODO return Promise or Observable?
-  getPorts(): Promise<string[]> {
+  getPorts(): Observable<string[]> {
     return this.dispatch('getPorts').pipe(
       map((response: any) => {
         // TODO deserialise the json response and validate
         return response;
       })
-    ).toPromise();
+    );
   }
 
   private dispatch(action: string): Observable<any> {
-      return this.client.pipe(
+      return this.matrixConnect.getChannel('SerialPort').pipe(
         first(),
         concatMap((client: ChannelClient) => {
           return from(client.dispatch(action));

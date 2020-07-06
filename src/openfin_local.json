@@ -6,7 +6,12 @@
     "url": "http://localhost:4200",
     "uuid": "net.i2037.fx-finesse",
     "autoShow": true,
-    "defaultCentered": true
+    "defaultCentered": true,
+    "permissions": {
+      "System": {
+        "launchExternalProcess": true
+      }
+    }
   },
   "runtime": {
     "arguments": "",
