@@ -14,7 +14,10 @@ export class SerialPortService {
   }
 
   isSupported(): Observable<boolean> {
-    // TODO we need a quick way to detect whether matrix connect is supported on this platform, i.e. Windows openfin
+    // TODO we need a way to detect whether matrix connect is supported on this platform
+    //  1) openfin
+    //  2) windows
+    //  3) administrator has granted us the launch external process entitlement (can we detect?)
     return of(typeof fin !== 'undefined');
   }
 
