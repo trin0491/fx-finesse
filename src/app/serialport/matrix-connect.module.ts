@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {SerialPortService} from './serial-port.service';
+import {MatrixConnect} from './matrix-connect';
 
 
 @NgModule({
@@ -8,9 +9,9 @@ import {SerialPortService} from './serial-port.service';
   imports: [
     CommonModule
   ],
-  providers: [SerialPortService]
+  providers: [SerialPortService, MatrixConnect]
 })
-export class SerialPortModule {
+export class MatrixConnectModule {
 
 
 

@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import {SerialPortModule} from './serialport/serial-port.module';
+import {MatrixConnectModule} from './serialport/matrix-connect.module';
 
 @NgModule({
   declarations: [
@@ -12,7 +12,7 @@ import {SerialPortModule} from './serialport/serial-port.module';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    SerialPortModule
+    MatrixConnectModule
   ],
   providers: [],
   bootstrap: [AppComponent]
