@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {SerialPortService} from './serialport/serial-port.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,14 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'fx-finesse';
+  ports = [''];
+
+  constructor(private serialPort: SerialPortService) {
+  }
+
+  getPorts(): void {
+    this.serialPort.getPorts().then((ports) => {
+      this.ports = ports;
+    });
+  }
 }

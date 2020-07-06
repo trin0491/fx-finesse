@@ -12,6 +12,13 @@ function initWithOpenFin(): void {
       fin.desktop.System.showDeveloperTools(winInfo.uuid, winInfo.mainWindow.name);
     });
   });
+
+  if (environment.production) {
+    enableProdMode();
+  }
+
+  platformBrowserDynamic().bootstrapModule(AppModule)
+    .catch(err => console.error(err));
 }
 
 if (typeof fin !== 'undefined') {
@@ -20,9 +27,4 @@ if (typeof fin !== 'undefined') {
   });
 }
 
-if (environment.production) {
-  enableProdMode();
-}
 
-platformBrowserDynamic().bootstrapModule(AppModule)
-  .catch(err => console.error(err));
