@@ -9,7 +9,8 @@
     "defaultCentered": true,
     "permissions": {
       "System": {
-        "launchExternalProcess": true
+        "launchExternalProcess": true,
+        "terminateExternalProcess": true
       }
     }
   },
