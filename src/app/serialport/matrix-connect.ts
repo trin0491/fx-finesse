@@ -1,7 +1,7 @@
 import ChannelClient = fin.ChannelClient;
-import {from, Observable, Subscriber, concat, of} from 'rxjs';
+import {Observable, Subscriber, of} from 'rxjs';
 import Identity = fin.Identity;
-import {catchError, concatMap, map} from 'rxjs/operators';
+import {concatMap} from 'rxjs/operators';
 
 export class MatrixConnect {
 
