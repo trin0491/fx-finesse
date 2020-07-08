@@ -8,11 +8,12 @@ export class MatrixConnect {
   // number of ms to wait for process to exit gracefully before issuing terminate
   private static readonly TERMINATE_TIMEOUT = 3000;
 
+  // TODO inject fin. dependencies so this class can be unit tested
   constructor() {
 
   }
 
-  // TODO name and should this return more than the UUID of the process?
+  // TODO this should be a state machine
   private getMatrixConnect(): Observable<Identity> {
     return new Observable<Identity>((subscriber => {
       // // TODO do we need to detect existing instance?
@@ -23,7 +24,7 @@ export class MatrixConnect {
         listener: (result) => {
           console.log(`Process ${result.uuid} exited with code ${result.exitCode}`);
           identity = null;
-          // error or complete?
+          // check error or complete?
           subscriber.complete();
         },
         lifetime: 'window'
