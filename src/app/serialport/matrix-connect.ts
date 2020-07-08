@@ -15,29 +15,38 @@ export class MatrixConnect {
   // TODO name and should this return more than the UUID of the process?
   private getMatrixConnect(): Observable<Identity> {
     return new Observable<Identity>((subscriber => {
-      // TODO do we need to detect existing instance?
+      // // TODO do we need to detect existing instance?
       let identity: Identity;
       fin.System.launchExternalProcess({
         path: 'C:\\Users\\rprie\\source\\repos\\SharkFin\\SharkFin\\bin\\Release\\netcoreapp3.1\\publish\\SharkFin.exe',
         arguments: '',
         listener: (result) => {
-          console.log('the exit code', result.exitCode);
+          console.log(`Process ${result.uuid} exited with code ${result.exitCode}`);
+          identity = null;
+          // error or complete?
+          subscriber.complete();
         },
         lifetime: 'window'
       }).then((id: Identity) => {
+        console.log('Process started: ', id);
         identity = id;
         subscriber.next(identity);
       }).catch((error) => {
+        console.error('Process failed to start', error);
         subscriber.error(error);
       });
 
       return () => {
-        // TODO do we need to create a shutdown command so that matrix connect can shutdown gracefully?
-        fin.System.terminateExternalProcess({
-          uuid: identity.uuid,
-          timeout: MatrixConnect.TERMINATE_TIMEOUT,
-          killTree: true
-        });
+        // TODO do we need to create a shutdown command to shutdown gracefully and shutdown instance that we didn't start?
+        if (identity) {
+          fin.System.terminateExternalProcess({
+            uuid: identity.uuid,
+            timeout: MatrixConnect.TERMINATE_TIMEOUT,
+            killTree: true
+          }).catch((reason) => {
+            console.error('Failed to terminate: ', reason);
+          });
+        }
       };
     }));
   }
@@ -65,7 +74,9 @@ export class MatrixConnect {
 
           return () => {
             if (channel) {
-              channel.disconnect();
+              channel.disconnect().catch((reason) => {
+                console.error('Failed to disconnect from channel: ' + channelName, reason);
+              });
             }
           };
         });
