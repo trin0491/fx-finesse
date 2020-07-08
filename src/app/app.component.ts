@@ -16,10 +16,18 @@ export class AppComponent {
   }
 
   getPorts(): void {
+    console.log('Sending getPorts');
     this.ports = this.serialPort.getPorts().pipe(
       catchError((err) => {
         return of([err.toString()]);
       })
+    );
+  }
+
+  sendKey(): void {
+    this.serialPort.sendKey('A').subscribe(
+      () => console.log('sent key'),
+      error => console.error('Failed to send key', error)
     );
   }
 }

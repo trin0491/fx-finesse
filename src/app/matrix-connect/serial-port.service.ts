@@ -27,10 +27,14 @@ export class SerialPortService {
     );
   }
 
-  private dispatch(action: string): Observable<any> {
+  sendKey(key: string): Observable<void> {
+    return this.dispatch('sendKey', key);
+  }
+
+  private dispatch(action: string, payload?: any): Observable<any> {
       return this.matrixConnect.getChannel('SerialPort').pipe(
         concatMap((client: ChannelClient) => {
-          return from(client.dispatch(action));
+          return from(client.dispatch(action, payload));
         }),
         first()
       );
