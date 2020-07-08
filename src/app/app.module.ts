@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import {MatrixConnectModule} from './serialport/matrix-connect.module';
+import {MatrixConnectModule} from './matrix-connect/matrix-connect.module';
 
 @NgModule({
   declarations: [

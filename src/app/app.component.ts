@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {SerialPortService} from './serialport/serial-port.service';
+import {SerialPortService} from './matrix-connect/serial-port.service';
 import {Observable, of} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 
