@@ -10,16 +10,16 @@ import {catchError} from 'rxjs/operators';
 })
 export class AppComponent {
   title = 'fx-finesse';
-  ports: Observable<string[]>;
+  ports: Observable<string>;
 
   constructor(private serialPort: SerialPortService) {
   }
 
   getPorts(): void {
-    console.log('Sending getPorts');
-    this.ports = this.serialPort.getPorts().pipe(
+    // this.ports = this.serialPort.getPorts().pipe(
+    this.ports = this.serialPort.openPort('COM3').pipe(
       catchError((err) => {
-        return of([err.toString()]);
+        return of(err.toString());
       })
     );
   }

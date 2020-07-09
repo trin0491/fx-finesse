@@ -31,6 +31,27 @@ export class SerialPortService {
     return this.dispatch('sendKey', key);
   }
 
+  openPort(portName: string): Observable<string> {
+    // TODO there will be a more elegant way of doing this that actually deals with race condition between subscription and dispatch
+    return new Observable<string>((subscriber) => {
+
+      const subListener = this.matrixConnect.subscribe<string>('dataReceived')
+        .subscribe((msg) => subscriber.next(msg), (err) => subscriber.error(err));
+
+      const subRequest = this.dispatch('openPort', portName)
+        .subscribe(() => {
+        }, (err) => {
+          subscriber.error(err);
+        });
+
+      return () => {
+        subListener.unsubscribe();
+        subRequest.unsubscribe();
+      };
+    });
+  }
+
+
   private dispatch(action: string, payload?: any): Observable<any> {
       return this.matrixConnect.getChannel('SerialPort').pipe(
         concatMap((client: ChannelClient) => {

@@ -7,6 +7,7 @@ export class MatrixConnect {
 
   // number of ms to wait for process to exit gracefully before issuing terminate
   private static readonly TERMINATE_TIMEOUT = 3000;
+  private static readonly UUID = '8651D4BB-5B58-4AE6-9984-3E6DB1641E7D';
 
   // TODO inject fin. dependencies so this class can be unit tested
   constructor() {
@@ -83,5 +84,15 @@ export class MatrixConnect {
         });
       })
     );
+  }
+
+  subscribe<T>(topic: string): Observable<T> {
+    return new Observable<T>(subscriber => {
+      fin.InterApplicationBus.subscribe({uuid: MatrixConnect.UUID}, topic, (message) => {
+        subscriber.next(message);
+      }).catch((err) => {
+        subscriber.error(err);
+      });
+    });
   }
 }

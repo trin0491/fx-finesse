@@ -4,7 +4,7 @@
     "name": "Openfin FX Finesse",
     "description": "OpenFin lab applications",
     "url": "http://localhost:4200",
-    "uuid": "net.i2037.fx-finesse",
+    "uuid": "3A9F1CA1-E453-4BE3-9789-4880F372791D",
     "autoShow": true,
     "defaultCentered": true,
     "permissions": {
