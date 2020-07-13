@@ -1,9 +1,10 @@
 import ChannelClient = fin.ChannelClient;
-import {Observable, Subscriber, of} from 'rxjs';
+import {Observable} from 'rxjs';
 import Identity = fin.Identity;
-import {concatMap} from 'rxjs/operators';
+import {Injectable} from '@angular/core';
 
-export class MatrixConnect {
+@Injectable()
+export class MatrixConnectService {
 
   // number of ms to wait for process to exit gracefully before issuing terminate
   private static readonly TERMINATE_TIMEOUT = 3000;
@@ -43,7 +44,7 @@ export class MatrixConnect {
         if (identity) {
           fin.System.terminateExternalProcess({
             uuid: identity.uuid,
-            timeout: MatrixConnect.TERMINATE_TIMEOUT,
+            timeout: MatrixConnectService.TERMINATE_TIMEOUT,
             killTree: true
           }).catch((reason) => {
             console.error('Failed to terminate: ', reason);
@@ -62,7 +63,7 @@ export class MatrixConnect {
   }
 
   openChannel(channelName: string): Promise<ChannelClient> {
-    // TODO creating channel client is orthogonal to MatrixConnect identity so they should occur parallel
+    // TODO creating channel client is orthogonal to MatrixConnectService identity so they should occur parallel
     return this.getMatrixConnect().toPromise().then((identity) => {
         return fin.InterApplicationBus.Channel.connect(channelName);
       });
@@ -79,7 +80,7 @@ export class MatrixConnect {
 
   subscribe<T>(topic: string): Observable<T> {
     return new Observable<T>(subscriber => {
-      fin.InterApplicationBus.subscribe({uuid: MatrixConnect.UUID}, topic, (message) => {
+      fin.InterApplicationBus.subscribe({uuid: MatrixConnectService.UUID}, topic, (message) => {
         subscriber.next(message);
       }).catch((err) => {
         subscriber.error(err);

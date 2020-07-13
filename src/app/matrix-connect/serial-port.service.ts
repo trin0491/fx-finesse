@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {MatrixConnect} from './matrix-connect';
+import {MatrixConnectService} from './matrix-connect.service';
 import ChannelClient = fin.ChannelClient;
 import {from, Observable} from 'rxjs';
 import {concatMap, first, map} from 'rxjs/operators';
@@ -12,7 +12,7 @@ export class SerialPortService {
 
   private static readonly CHANNEL_NAME = 'SerialPort';
 
-  constructor(private matrixConnect: MatrixConnect) {
+  constructor(private matrixConnect: MatrixConnectService) {
   }
 
   isSupported(): Observable<boolean> {
