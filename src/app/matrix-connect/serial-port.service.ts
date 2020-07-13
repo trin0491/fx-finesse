@@ -34,19 +34,23 @@ export class SerialPortService {
   }
 
   openPort(portName: string): Observable<string> {
-    // TODO there will be a more elegant way of doing this that actually deals with race condition between subscription and dispatch
+    // TODO there will probably be a more elegant way of dealing with race condition between subscription and dispatch
     return new Observable<string>((subscriber) => {
-
-      const msgBusSub = this.matrixConnect.subscribe<string>('dataReceived')
-        .subscribe((msg) => subscriber.next(msg), (err) => subscriber.error(err));
-
-      this.dispatch('openPort', portName).catch((err) => {
-        msgBusSub.unsubscribe();
+      const topic = 'dataReceived';
+      const callback = (msg) => {
+        subscriber.next(msg);
+      };
+      this.matrixConnect.subscribe<string>(topic, callback).then(() => {
+        this.dispatch('openPort', portName).catch((err) => {
+          this.matrixConnect.unsubscribe(topic, callback);
+          subscriber.error(err);
+        });
+      }, (err) => {
         subscriber.error(err);
       });
 
       return () => {
-        msgBusSub.unsubscribe();
+        this.matrixConnect.unsubscribe(topic, callback);
       };
     });
   }
@@ -54,7 +58,7 @@ export class SerialPortService {
   private dispatch(action: string, payload?: any): Promise<any> {
       return this.matrixConnect.openChannel(SerialPortService.CHANNEL_NAME).then((client: ChannelClient) => {
           return client.dispatch(action, payload).finally(() => {
-            this.matrixConnect.closeChannel(SerialPortService.CHANNEL_NAME);
+            this.matrixConnect.closeChannel(client);
           });
       });
   }

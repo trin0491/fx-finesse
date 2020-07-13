@@ -1,57 +1,75 @@
 import ChannelClient = fin.ChannelClient;
-import {Observable} from 'rxjs';
-import Identity = fin.Identity;
 import {Injectable} from '@angular/core';
+import {MatrixConnectProcess} from './matrix-connect-process.service';
+
+enum State {
+  Stopped,
+  Starting,
+  Started,
+  Stopping,
+}
 
 @Injectable()
 export class MatrixConnectService {
 
-  // number of ms to wait for process to exit gracefully before issuing terminate
-  private static readonly TERMINATE_TIMEOUT = 3000;
-  private static readonly UUID = '8651D4BB-5B58-4AE6-9984-3E6DB1641E7D';
+  private refCount = 0;
+  private state = State.Stopped;
 
-  // TODO inject fin. dependencies so this class can be unit tested
-  constructor() {
+  constructor(private process: MatrixConnectProcess) {
 
   }
 
-  // TODO this should be a state machine
-  private getMatrixConnect(): Observable<Identity> {
-    return new Observable<Identity>((subscriber => {
-      // // TODO do we need to detect existing instance?
-      let identity: Identity;
-      fin.System.launchExternalProcess({
-        path: 'C:\\Users\\rprie\\source\\repos\\SharkFin\\SharkFin\\bin\\Release\\netcoreapp3.1\\publish\\SharkFin.exe',
-        arguments: '',
-        listener: (result) => {
-          console.log(`Process ${result.uuid} exited with code ${result.exitCode}`);
-          identity = null;
-          // check error or complete?
-          subscriber.complete();
-        },
-        lifetime: 'window'
-      }).then((id: Identity) => {
-        console.log('Process started: ', id);
-        identity = id;
-        subscriber.next(identity);
-      }).catch((error) => {
-        console.error('Process failed to start', error);
-        subscriber.error(error);
-      });
+  private acquire(): void {
+    this.refCount += 1;
+    this.evaluate();
+  }
 
-      return () => {
-        // TODO do we need to create a shutdown command to shutdown gracefully and shutdown instance that we didn't start?
-        if (identity) {
-          fin.System.terminateExternalProcess({
-            uuid: identity.uuid,
-            timeout: MatrixConnectService.TERMINATE_TIMEOUT,
-            killTree: true
-          }).catch((reason) => {
-            console.error('Failed to terminate: ', reason);
-          });
-        }
-      };
-    }));
+  private release(): void {
+    if (this.refCount > 0) {
+      this.refCount -= 1;
+      this.evaluate();
+    } else {
+      throw new Error('Invalid State: attempt to decrement Matrix Connect reference count below zero');
+    }
+  }
+
+  private start(): void {
+    console.log('Starting Matrix Connect');
+    this.state = State.Starting;
+    this.process.start((result) => {
+      if (result.exitCode !== 0) {
+        console.error(`Process ${result.uuid} exited with error code ${result.exitCode}`);
+      }
+      this.state = State.Stopped;
+    }).then((identity) => {
+      this.state = State.Started;
+      this.evaluate();
+    }, (err) => {
+      console.error('Failed to start Matrix Connect', err);
+      this.state = State.Stopped;
+    });
+  }
+
+  private stop(): void {
+    console.log('Stopping Matrix Connect');
+    this.state = State.Stopping;
+    this.process.stop().then(() => {
+      this.state = State.Stopped;
+      this.evaluate();
+    }, (err) => {
+      console.error('Failed to stop Matrix Connect', err);
+      this.state = State.Started;
+    });
+  }
+
+  // TODO should this retry (re-evaluate) if process fails to start/stop - more trouble than it is probably worth
+  // given it would need to track retry count and use return code of process to detect duplicate process
+  private evaluate(): void {
+    if (this.refCount > 0 && this.state === State.Stopped) {
+      this.start();
+    } else if (this.refCount < 1 && this.state === State.Started) {
+      this.stop();
+    }
   }
 
   isSupported(): Promise<boolean> {
@@ -63,28 +81,34 @@ export class MatrixConnectService {
   }
 
   openChannel(channelName: string): Promise<ChannelClient> {
-    // TODO creating channel client is orthogonal to MatrixConnectService identity so they should occur parallel
-    return this.getMatrixConnect().toPromise().then((identity) => {
-        return fin.InterApplicationBus.Channel.connect(channelName);
-      });
+    this.acquire();
+    return this.process.connect(channelName).catch((reason) => {
+      console.error('Failed to open channel', reason);
+      this.release();
+      throw reason;
+    });
   }
 
-  closeChannel(channelName: string): void {
-    // TODO
-    // if (channel) {
-    //   channel.disconnect().catch((reason) => {
-    //     console.error('Failed to disconnect from channel', reason);
-    //   });
-    // }
+  closeChannel(channel: ChannelClient): Promise<void> {
+    return channel.disconnect().then(() => {
+      this.release();
+    }).catch((reason) => {
+      console.error('Failed to close channel', reason);
+      throw reason;
+    });
   }
 
-  subscribe<T>(topic: string): Observable<T> {
-    return new Observable<T>(subscriber => {
-      fin.InterApplicationBus.subscribe({uuid: MatrixConnectService.UUID}, topic, (message) => {
-        subscriber.next(message);
-      }).catch((err) => {
-        subscriber.error(err);
-      });
+  subscribe<T>(topic: string, callback: (msg: T) => void): Promise<void> {
+    this.acquire();
+    return this.process.subscribe(topic, callback).catch((err) => {
+      this.release();
+      throw err;
+    });
+  }
+
+  unsubscribe<T>(topic: string, callback: (msg: T) => void): Promise<void> {
+    return this.process.unsubscribe(topic, callback).then(() => {
+      this.release();
     });
   }
 }
