@@ -10,16 +10,18 @@ import {concatMap, first, map} from 'rxjs/operators';
 })
 export class SerialPortService {
 
+  private static readonly CHANNEL_NAME = 'SerialPort';
+
   constructor(private matrixConnect: MatrixConnect) {
   }
 
   isSupported(): Observable<boolean> {
-    return this.matrixConnect.isSupported();
+    return from(this.matrixConnect.isSupported());
   }
 
   // TODO return Promise or Observable?
   getPorts(): Observable<string[]> {
-    return this.dispatch('getPorts').pipe(
+    return from(this.dispatch('getPorts')).pipe(
       map((response: any) => {
         // TODO deserialise the json response and validate
         return response;
@@ -28,35 +30,32 @@ export class SerialPortService {
   }
 
   sendKey(key: string): Observable<void> {
-    return this.dispatch('sendKey', key);
+    return from(this.dispatch('sendKey', key));
   }
 
   openPort(portName: string): Observable<string> {
     // TODO there will be a more elegant way of doing this that actually deals with race condition between subscription and dispatch
     return new Observable<string>((subscriber) => {
 
-      const subListener = this.matrixConnect.subscribe<string>('dataReceived')
+      const msgBusSub = this.matrixConnect.subscribe<string>('dataReceived')
         .subscribe((msg) => subscriber.next(msg), (err) => subscriber.error(err));
 
-      const subRequest = this.dispatch('openPort', portName)
-        .subscribe(() => {
-        }, (err) => {
-          subscriber.error(err);
-        });
+      this.dispatch('openPort', portName).catch((err) => {
+        msgBusSub.unsubscribe();
+        subscriber.error(err);
+      });
 
       return () => {
-        subListener.unsubscribe();
-        subRequest.unsubscribe();
+        msgBusSub.unsubscribe();
       };
     });
   }
 
-  private dispatch(action: string, payload?: any): Observable<any> {
-      return this.matrixConnect.getChannel('SerialPort').pipe(
-        concatMap((client: ChannelClient) => {
-          return from(client.dispatch(action, payload));
-        }),
-        first()
-      );
+  private dispatch(action: string, payload?: any): Promise<any> {
+      return this.matrixConnect.openChannel(SerialPortService.CHANNEL_NAME).then((client: ChannelClient) => {
+          return client.dispatch(action, payload).finally(() => {
+            this.matrixConnect.closeChannel(SerialPortService.CHANNEL_NAME);
+          });
+      });
   }
 }

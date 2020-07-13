@@ -53,15 +53,15 @@ export class MatrixConnect {
     }));
   }
 
-  isSupported(): Observable<boolean> {
+  isSupported(): Promise<boolean> {
     // TODO we need a way to detect whether matrix connect is supported on this platform
     //  1) openfin
     //  2) windows
     //  3) administrator has granted us the launch external process entitlement (can we detect?)
-    return of(typeof fin !== 'undefined');
+    return Promise.resolve(typeof fin !== 'undefined');
   }
 
-  getChannel(channelName: string): Observable<ChannelClient> {
+  openChannel(channelName: string): Promise<ChannelClient> {
     // TODO creating channel client is orthogonal to MatrixConnect identity so they should occur parallel
     return this.getMatrixConnect().pipe(
       concatMap((identity) => {
@@ -83,7 +83,11 @@ export class MatrixConnect {
           };
         });
       })
-    );
+    ).toPromise();
+  }
+
+  closeChannel(channelName: string): void {
+
   }
 
   subscribe<T>(topic: string): Observable<T> {
