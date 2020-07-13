@@ -63,31 +63,18 @@ export class MatrixConnect {
 
   openChannel(channelName: string): Promise<ChannelClient> {
     // TODO creating channel client is orthogonal to MatrixConnect identity so they should occur parallel
-    return this.getMatrixConnect().pipe(
-      concatMap((identity) => {
-        return new Observable<ChannelClient>((subscriber: Subscriber<ChannelClient>) => {
-          let channel: ChannelClient;
-          fin.InterApplicationBus.Channel.connect(channelName).then((client: ChannelClient) => {
-            channel = client;
-            subscriber.next(channel);
-          }).catch((reason) => {
-            subscriber.error(reason);
-          });
-
-          return () => {
-            if (channel) {
-              channel.disconnect().catch((reason) => {
-                console.error('Failed to disconnect from channel: ' + channelName, reason);
-              });
-            }
-          };
-        });
-      })
-    ).toPromise();
+    return this.getMatrixConnect().toPromise().then((identity) => {
+        return fin.InterApplicationBus.Channel.connect(channelName);
+      });
   }
 
   closeChannel(channelName: string): void {
-
+    // TODO
+    // if (channel) {
+    //   channel.disconnect().catch((reason) => {
+    //     console.error('Failed to disconnect from channel', reason);
+    //   });
+    // }
   }
 
   subscribe<T>(topic: string): Observable<T> {
