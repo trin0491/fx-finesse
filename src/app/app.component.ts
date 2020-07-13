@@ -16,8 +16,15 @@ export class AppComponent {
   }
 
   getPorts(): void {
-    // this.ports = this.serialPort.getPorts().pipe(
-    this.ports = this.serialPort.openPort('COM3').pipe(
+    this.ports = this.serialPort.getPorts().pipe(
+      catchError((err) => {
+        return of(err.toString());
+      })
+    );
+  }
+
+  openPort(): void {
+     this.ports = this.serialPort.openPort('COM3').pipe(
       catchError((err) => {
         return of(err.toString());
       })

@@ -51,7 +51,6 @@ export class SerialPortService {
     });
   }
 
-
   private dispatch(action: string, payload?: any): Observable<any> {
       return this.matrixConnect.getChannel('SerialPort').pipe(
         concatMap((client: ChannelClient) => {
