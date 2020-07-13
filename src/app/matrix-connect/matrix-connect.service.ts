@@ -1,6 +1,6 @@
 import ChannelClient = fin.ChannelClient;
 import {Injectable} from '@angular/core';
-import {MatrixConnectProcess} from './matrix-connect-process.service';
+import {MatrixConnectProcess} from './matrix-connect-process';
 
 enum State {
   Stopped,
