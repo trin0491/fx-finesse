@@ -50,7 +50,12 @@ export class SerialPortService {
       });
 
       return () => {
-        this.matrixConnect.unsubscribe(topic, callback);
+        this.matrixConnect.unsubscribe(topic, callback).catch((err) => {
+          console.error('Failed to unsubscribe from ' + topic, err);
+        });
+        this.dispatch('closePort', portName).catch((err) => {
+          console.error('Failed to close port ' + portName, err);
+        });
       };
     });
   }

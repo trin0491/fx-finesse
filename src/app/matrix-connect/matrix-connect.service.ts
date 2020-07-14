@@ -38,7 +38,7 @@ export class MatrixConnectService {
     this.state = State.Starting;
     this.process.start((result) => {
       if (result.exitCode !== 0) {
-        console.error(`Process ${result.uuid} exited with error code ${result.exitCode}`);
+        console.error(`Matrix Connect ${result.uuid} exited with error code ${result.exitCode}`);
       }
       this.state = State.Stopped;
     }).then((identity) => {

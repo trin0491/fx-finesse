@@ -32,8 +32,6 @@ export class MatrixConnectProcess {
       uuid: MatrixConnectProcess.UUID,
       timeout: MatrixConnectProcess.TERMINATE_TIMEOUT,
       killTree: true
-    }).catch((reason) => {
-      console.error('Failed to terminate: ', reason);
     });
   }
 
